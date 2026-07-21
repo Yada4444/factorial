@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factorial Calculator</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f9;
+        margin: 0;
+    }
+
+    .calculator {
+        background-color: #ffffff;
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        width: 320px;
+    }
+
+    .title {
+        font-size: 1.1rem;
+        color: #333333;
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .input-group {
+        margin-bottom: 12px;
+    }
+
+    label {
+        display: block;
+        font-size: 0.85rem;
+        color: #666666;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+
+    #input {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.1rem;
+        box-sizing: border-box;
+        border: 1px solid #dcdce6;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    #input:focus {
+        border-color: #3f51b5;
+    }
+
+    #total {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.4rem;
+        text-align: right;
+        border: 1px solid #dcdce6;
+        background-color: #f9f9fc;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        font-weight: bold;
+        color: #2c3e50;
+        box-sizing: border-box;
+    }
+
+    .clear-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #ffeeed;
+        color: #ff4800;
+        transition: background-color 0.2s;
+    }
+
+    .clear-btn:hover {
+        background-color: #ffd6d3;
+    }
+</style>
+</head>
+<body>
+
+<div class="calculator">
+    <div class="title">Instant Factorial Calculator</div>
+    
+    <div class="input-group">
+        <label for="input">Enter Number (n)</label>
+        <input id="input" type="number" placeholder="e.g. 5" oninput="calculateFactorial()">
+    </div>
+
+    <div class="input-group">
+        <label for="total">Result (n!)</label>
+        <input id="total" value="1" readonly>
+    </div>
+
+    <button onclick="resetCalc()" class="clear-btn">Clear</button>
+</div>
+
+<script>
+function calculateFactorial() {
+    let rawInput = document.getElementById('input').value;
+    let totalField = document.getElementById('total');
+    
+    // If input is empty, reset total to 1
+    if (rawInput === '') {
+        totalField.value = '1';
+        return;
+    }
+
+    let n = Number(rawInput);
+    
+    // Handle negative numbers or bounds gracefully
+    if (n < 0) {
+        totalField.value = "Error";
+        return;
+    }
+
+    // Limit to prevent crashing on massive numbers
+    if (n > 170) {
+        totalField.value = "Infinity";
+        return;
+    }
+
+    let res = 1;
+    for (let i = 2; i <= n; i++) {
+        res *= i;
+    }
+    
+    totalField.value = res;
+}
+
+function resetCalc() {
+    document.getElementById('input').value = '';
+    document.getElementById('total').value = '1';
+}
+</script>
+
+</body>
+</html>
