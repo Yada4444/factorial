@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h3>calculator</h3>
+<input id="i" type="number" step="1" oninput="f()"><br>
+<p>answer:</p>
+<input id="t" readonly><br><br>
+<button onclick="i.value=t.value=''">clear</button>
+
+<h4>Automated Test Results:</h4>
+<ul id="test-results"></ul>
+
+<script>
+function f() {
+    let n = Number(i.value), a = 1;
+    if (n < 0 || !Number.isInteger(n)) { t.value = "Error"; return; }
+    for (let x = 1; x <= n; x++) a *= x;
+    t.value = n === 0 ? 1 : a;
+}
+
+// Helper function to simulate typing characters one by one with a delay
+async function typeValue(inputElement, value, delay = 200) {
+    inputElement.value = "";
+    const stringValue = String(value);
+    
+    for (let char of stringValue) {
+        inputElement.value += char;
+        // Trigger the input event so oninput="f()" runs automatically
+        inputElement.dispatchEvent(new Event('input'));
+        // Wait a short moment so you can see it type visually
+        await new Promise(resolve => setTimeout(resolve, delay));
+    }
+}
+
+async function runTests() {
+    const testCases = [
+        { input: 5, expected: "120" },
+        { input: 6, expected: "720" },
+        { input: 0, expected: "1" },
+        { input: -1, expected: "Error" }
+    ];
+
+    const resultsList = document.getElementById("test-results");
+    
+    for (let index = 0; index < testCases.length; index++) {
+        const test = testCases[index];
+        
+        // Visually type the number into the input field
+        await typeValue(i, test.input, 300);
+        
+        // Wait an extra beat to let the user look at the result
+        await new Promise(resolve => setTimeout(resolve, 400));
+        
+        const actual = t.value;
+        const passed = actual === test.expected;
+        
+        const li = document.createElement("li");
+        li.style.color = passed ? "green" : "red";
+        li.textContent = `Test ${index + 1} (Input: ${test.input}): ${passed ? "PASSED" : `FAILED (Expected ${test.expected}, got ${actual})`}`;
+        resultsList.appendChild(li);
+    }
+    
+    // Clear inputs after testing is done
+    await new Promise(resolve => setTimeout(resolve, 500));
+    i.value = t.value = '';
+}
+
+// Run tests once the page loads
+window.onload = runTests;
+</script>
+</body>
+</html>
